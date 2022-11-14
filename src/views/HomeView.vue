@@ -14,8 +14,6 @@
             >
               <input
                 type="checkbox"
-                name="toggle"
-                id="toggle"
                 v-model="deviceStatus.valve1"
                 @change="switchSettings(2, deviceStatus.valve1)"
                 class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
@@ -39,8 +37,6 @@
             >
               <input
                 type="checkbox"
-                name="toggle"
-                id="toggle"
                 v-model="deviceStatus.valve2"
                 @change="switchSettings(3, deviceStatus.valve2)"
                 class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
@@ -60,8 +56,6 @@
         >
           <input
             type="checkbox"
-            name="toggle"
-            id="toggle"
             v-model="deviceStatus.isManual"
             @change="switchSettings(1, deviceStatus.isManual)"
             class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
@@ -80,9 +74,8 @@
           <input
             type="checkbox"
             name="toggle"
-            id="toggle"
             v-model="deviceStatus.isPump"
-            @change="switchSettings(4, deviceStatus.isPump)"
+            @change="switchSettings(5, deviceStatus.isPump)"
             class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
           />
           <label
@@ -159,7 +152,7 @@ export default {
         console.log(data);
         this.deviceStatus.sensor1 = data.sensor_1;
         this.deviceStatus.sensor2 = data.sensor_2;
-        this.toast.success("Data Diperbaharui.");
+        // this.toast.success("Data Diperbaharui.");
         this.refreshLoading = false;
       } catch (error) {
         this.toast.error(error);
@@ -181,11 +174,10 @@ export default {
     },
     async switchSettings(idSettings, firstVal) {
       try {
-        const toggle = !firstVal;
-        const payload = {
-          id: idSettings,
-          value: this.boolInt(toggle),
-        }
+        const toggle = firstVal;
+        const payload = new URLSearchParams();
+        payload.append('id', idSettings);
+        payload.append('value', this.boolInt(toggle));
         const {
           data: { data },
         } = await API.post('c/update_settings', payload);
@@ -195,9 +187,10 @@ export default {
         this.deviceStatus.valve1 = this.intBoolean(data.valve_1);
         this.deviceStatus.valve2 = this.intBoolean(data.valve_2);
         this.toast.success("Berhasil Mengubah");
-        this.loadSensorData();
+        this.loadData();
       } catch(error) {
         this.toast.error(error);
+        this.loadSensorData();
       }
     }
   },
