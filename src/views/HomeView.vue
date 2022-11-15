@@ -16,6 +16,7 @@
                 type="checkbox"
                 v-model="deviceStatus.valve1"
                 @change="switchSettings(2, deviceStatus.valve1)"
+                :disabled="!deviceStatus.isManual"
                 class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
               />
               <label
@@ -39,6 +40,7 @@
                 type="checkbox"
                 v-model="deviceStatus.valve2"
                 @change="switchSettings(3, deviceStatus.valve2)"
+                :disabled="!deviceStatus.isManual"
                 class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
               />
               <label
@@ -84,9 +86,11 @@
           ></label>
         </div>
         <label for="toggle" class="text-xs text-gray-700"
-          >Sertakan Pompa.</label
+          >Gunakan Pompa.</label
         >
       </div>
+      <small v-if="deviceStatus.isPump">* ) Pompa hanya akan menyala apabila penyiram aktif<br>agar tidak terjadi kerusakan karena penyumbatan output air.</small>
+
       <div>
         <button
           class="bg-green-500  text-white font-bold py-2 px-4 rounded"
@@ -200,6 +204,13 @@ export default {
 };
 </script>
 <style>
+.toggle-checkbox {
+  @apply: border-green-400;
+  border-color: #68d391;
+}
+.toggle-checkbox:disabled {
+  border-color: rgb(209 213 219);;
+}
 .toggle-checkbox:checked {
   @apply: right-0 border-green-400;
   right: 0;
@@ -208,5 +219,12 @@ export default {
 .toggle-checkbox:checked + .toggle-label {
   @apply: bg-green-400;
   background-color: #68d391;
+}
+.toggle-checkbox:disabled + .toggle-label{
+  background-color: rgb(209 213 219);
+}
+
+.toggle-checkbox:disabled +toggle-che.toggle-checkbox:checked {
+  border-color: rgb(209 213 219) !important;
 }
 </style>
